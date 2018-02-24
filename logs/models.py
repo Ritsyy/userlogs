@@ -9,18 +9,6 @@ from simple_history.models import HistoricalRecords
 register(User, inherit=True)
 
 
-class Item(models.Model):
-    history = HistoricalRecords(inherit=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    brand = models.CharField(max_length=50)
-    category = models.CharField(max_length=50)
-    product_code = models.TextField()
-
-    def __str__(self):
-        return self.name
-
-
 class Variant(models.Model):
 
     SIZE_CHOICES = (
@@ -33,11 +21,24 @@ class Variant(models.Model):
 
     size = models.CharField(choices=SIZE_CHOICES, max_length=3, default=None, blank=True, null=True)
     cloth = models.CharField(max_length=50, null=True)
-    item = models.ForeignKey(Item)
     name = models.CharField(max_length=50)
     selling_price = models.IntegerField()
     cost_price = models.IntegerField()
     quantity = models.IntegerField()
+    history = HistoricalRecords(inherit=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Item(models.Model):
+    history = HistoricalRecords(inherit=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    variant = models.ForeignKey(Variant, null=True)
+    name = models.CharField(max_length=50)
+    brand = models.CharField(max_length=50)
+    category = models.CharField(max_length=50)
+    product_code = models.TextField()
 
     def __str__(self):
         return self.name
