@@ -5,6 +5,9 @@
   - virtualenv env_userlogs
   - source env_userlogs/bin/activate
   - pip install -r requirements.txt
+  - Create mysql database with DATABASE NAME: ` weavedin`, DATABASE USER: ` weavedinuser` and password: ` password` or edit the settings.py DATABASES according to the database created. 
+  - Run ` ./manage.py makemigrations`
+  - RUn ` ./manage.py migrate`
   - Create Superuser to access admin: ` ./manage createsuperuser `
   - Run Server: ` ./manage.py runserver`
 

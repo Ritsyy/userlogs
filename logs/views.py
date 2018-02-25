@@ -16,6 +16,13 @@ class WeavedinLogsView(APIView):
             raise Http404
 
     def get(self, request, user_id=None):
+
+        history_type_name_mapping = {
+            '+': 'Added',
+            '-': 'Deleted',
+            '~': 'Updated'
+        }
+
         if user_id:
             item_id = user_id
             item = Item.objects.filter(user=item_id)
@@ -32,19 +39,11 @@ class WeavedinLogsView(APIView):
             value['variant_history'] = variant.history.values()
             value['history'] = value['history'].values()
             for history in value['history']:
-                if history['history_type'] == '+':
-                    history['history_type'] = "Item Added"
-                elif history['history_type'] == '~':
-                    history['history_type'] = "Item Updated"
-                elif history['history_type'] == '-':
-                    history['history_type'] = "Item Deleted"
+                history_type_name = history_type_name_mapping.get(history['history_type'])
+                history['history_type'] = "Item " + history_type_name
             for history in value['variant_history']:
-                if history['history_type'] == '+':
-                    history['history_type'] = "Variant Added"
-                elif history['history_type'] == '~':
-                    history['history_type'] = "Variant Updated"
-                elif history['history_type'] == '-':
-                    history['history_type'] = "Variant Deleted"
+                history_type_name = history_type_name_mapping.get(history['history_type'])
+                history['history_type'] = "Variant " + history_type_name
             result.append(value)
 
         result = Response(result)
