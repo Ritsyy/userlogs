@@ -29,8 +29,10 @@ class WeavedinLogsView(APIView):
             logentires = LogEntry.objects.filter(object_id=item.id)
             log_data = LogEntrySerializer(logentires, many=True).data
             item_data['history'] = log_data
+            variants = item.variant_set.all()
+            for variant in variants:
+                variantentries = LogEntry.objects.filter(object_id=variant.id)
+                variant_data = LogEntrySerializer(variantentries, many=True).data
+                item_data['variant_history'] = variant_data
             response.append(item_data)
         return Response(response)
-
-            # variants = Item.variant_set.
-            # variants = []
