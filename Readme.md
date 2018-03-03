@@ -17,3 +17,7 @@ Edit the items and Variants to record view it's history
 
 For looking history of a user: ` http://localhost:8000/apiv1/user/1/`
 For looking complete Logs: ` http://localhost:8000/apiv1/logs/`
+For Filtering logs by time: 
+` http://localhost:8000/apiv1/user/1/?start_time=2018-02-24T19:30:54.856515Z`
+` http://localhost:8000/apiv1/user/1/?end_time=2018-02-24T19:30:54.856515Z`
+` http://localhost:8000/apiv1/user/1/?start_time=2018-02-19T19:15:21.036567Z&end_time=2018-02-19T19:16:10.476414Z`
