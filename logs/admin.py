@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Item, Variant
+from simple_history.admin import SimpleHistoryAdmin
 
 # Register your models here.
 

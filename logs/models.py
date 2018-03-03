@@ -2,11 +2,17 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
-from simple_history import register
-from simple_history.models import HistoricalRecords
 
 
-register(User, inherit=True)
+class Item(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    brand = models.CharField(max_length=50)
+    category = models.CharField(max_length=50)
+    product_code = models.TextField()
+
+    def __str__(self):
+        return self.name
 
 
 class Variant(models.Model):
@@ -25,20 +31,7 @@ class Variant(models.Model):
     selling_price = models.IntegerField()
     cost_price = models.IntegerField()
     quantity = models.IntegerField()
-    history = HistoricalRecords(inherit=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Item(models.Model):
-    history = HistoricalRecords(inherit=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    variant = models.ForeignKey(Variant, null=True)
-    name = models.CharField(max_length=50)
-    brand = models.CharField(max_length=50)
-    category = models.CharField(max_length=50)
-    product_code = models.TextField()
+    item = models.ForeignKey(Item, null=True)
 
     def __str__(self):
         return self.name

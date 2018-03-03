@@ -1,7 +1,9 @@
+from django.contrib.admin.models import LogEntry
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .serializers import LogsSerializer
+from .serializers import LogsSerializer, LogEntrySerializer
 from .models import *
 
 
@@ -17,35 +19,18 @@ class WeavedinLogsView(APIView):
 
     def get(self, request, user_id=None):
 
-        history_type_name_mapping = {
-            '+': 'Added',
-            '-': 'Deleted',
-            '~': 'Updated'
-        }
-
         if user_id:
-            item_id = user_id
-            item = Item.objects.filter(user=item_id)
+            items = Item.objects.filter(user=user_id)
         else:
-            item = Item.objects.all()
-        serializer = LogsSerializer(item, many=True)
+            items = Item.objects.all()
+        response = []
+        for item in items:
+            item_data = LogsSerializer(item).data
+            logentires = LogEntry.objects.filter(object_id=item.id)
+            log_data = LogEntrySerializer(logentires, many=True).data
+            item_data['history'] = log_data
+            response.append(item_data)
+        return Response(response)
 
-        response = Response(serializer.data)
-        data = response.data
-        result = []
-        for i in data:
-            value = dict(i)
-            variant = Variant.objects.get(id=value['variant'])
-            value['variant_history'] = variant.history.values()
-            value['history'] = value['history'].values()
-            for history in value['history']:
-                history_type_name = history_type_name_mapping.get(history['history_type'])
-                history['history_type'] = "Item " + history_type_name
-            for history in value['variant_history']:
-                history_type_name = history_type_name_mapping.get(history['history_type'])
-                history['history_type'] = "Variant " + history_type_name
-            result.append(value)
-
-        result = Response(result)
-
-        return result
+            # variants = Item.variant_set.
+            # variants = []
